@@ -15,6 +15,13 @@ func Init() {
 	if err != nil {
 		logrus.Fatal(err)
 	}
+	//var tablename1="users_go";
+	//var tablename2="todo_go";
+	// newly build two tables
+	DB.AutoMigrate(&Users{})
+	DB.AutoMigrate(&Todos{})
+
+
 }
 
 func connectDatabase() {
@@ -34,4 +41,30 @@ func connectDatabase() {
 	if err != nil {
 		logrus.Panic(err)
 	}
+}
+
+type request struct{
+	keyword string
+	value string
+}
+
+// 键值对查找
+func myfind(rqst request) Users {
+	var result Users;
+    DB.Where(rqst.keyword+" = ?",rqst.value).Find(&result)
+    return result
+}
+
+
+func adduser(newuser Users) {
+	DB.Create(&newuser)
+}
+
+func deleteuser(user Users){
+	DB.Delete(&user)
+}
+
+func dodify(user Users, modi request)
+{
+	user.(modi.keyword)=modi.value
 }

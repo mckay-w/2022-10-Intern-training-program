@@ -6,14 +6,15 @@ type Foo struct {
 }
 
 
-type users struct{
-	id     uint primary key
+type Users struct{
+	id     uint 
 	name   string
 	passwd string
 }
 
+
 type Todos struct{
-	id       uint primary key
+	id       uint 
 	user_id  uint
 	title    string
 	content  string
