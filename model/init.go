@@ -5,37 +5,41 @@ import (
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"fmt"
+	//"strconv"
 )
 
 var DB *gorm.DB
 
 func Init() {
 	connectDatabase()
-	err := DB.AutoMigrate(&Foo{}) // TODO: add table structs here
-	if err != nil {
-		logrus.Fatal(err)
-	}
 	//var tablename1="users_go";
 	//var tablename2="todo_go";
 	// newly build two tables
+	//DB.AutoMigrate(&Foo{})
 	DB.AutoMigrate(&Users{})
+	//DB.AutoMigrate(&Foo{})
 	DB.AutoMigrate(&Todos{})
-
-
 }
 
 func connectDatabase() {
 	viper.SetConfigName("config")
-	viper.AddConfigPath("./")
-	//if err := viper.ReadInConfig(); err != nil {
-	//logrus.Panic(err)
-	//}
+	viper.AddConfigPath("./model")
+	//viper.SetConfigType("json")
+	if err := viper.ReadInConfig(); err != nil {
+	logrus.Panic(err)
+	}
 
 	//loginInfo := viper.GetStringMapString("sql")
+	tet:=viper.Get("username")
 
-	/*dbArgs := loginInfo["username"] + ":" + loginInfo["password"] +
-	"@(localhost)/" + loginInfo["db_name"] + "?charset=utf8mb4&parseTime=True&loc=Local"*/
-	dbArgs := "todo" + ":" + "todo123" + "@(localhost)/" + "todo" + "?charset=utf8mb4&parseTime=True&loc=Local"
+	//dbArgs := loginInfo["username"] + ":" + loginInfo["password"] +
+	//"@(localhost)/" + loginInfo["db_name"] + "?charset=utf8mb4&parseTime=True&loc=Local"
+	username:=viper.GetString("username")
+	dbArgs:=username + ":" + viper.GetString("password")+
+	"@(localhost)/" + viper.GetString("db_name") + "?charset=utf8mb4&parseTime=True&loc=Local"
+	//dbArgs := "todo" + ":" + "todo123" + "@(localhost)/" + "todo" + "?charset=utf8mb4&parseTime=True&loc=Local"
+	fmt.Println(tet)
 	var err error
 	DB, err = gorm.Open(mysql.Open(dbArgs), &gorm.Config{})
 	if err != nil {
@@ -64,7 +68,14 @@ func deleteuser(user Users){
 	DB.Delete(&user)
 }
 
-func dodify(user Users, modi request)
-{
-	user.(modi.keyword)=modi.value
+func dodify(user Users, modi request) {
+
+	if(modi.keyword=="id"){
+		//user.id=uint(modi.value)
+	}else if(modi.keyword=="name"){
+		user.Name=modi.value
+	}else if(modi.keyword=="passwd"){
+		user.Passwd=modi.value
+	}
+	
 }
