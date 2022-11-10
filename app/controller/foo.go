@@ -12,13 +12,6 @@ import (
     "github.com/sirupsen/logrus"
 )
 
-
-// post 请求json字符串格式定义
-type PostInfo struct {
-    Code   int    `json:"Code" validate:"required,min=0,max=10"`  // 必须携带，而且是(0,10]的整数
-    Msg    string `json:"Msg" validate:"required,excludesall=!@#$%^&*()_-{}"` // 防特殊字符输入造成攻击风险
-}
-
 type request struct{
 	//keyword string `josn:"keyword"`
 	Keyword string `josn:"keyword"`
@@ -63,9 +56,7 @@ func Analysis(c echo.Context) error{
         logrus.Panic("json unmarshal error: ", err)
         return c.String(http.StatusInternalServerError, "Json unmarshal error")
     }
-	//fmt.Println(info)
     str:="\"Keyword\":\""+info.Keyword+"\",\"Value\":\""+info.Value+"\""
-    //fmt.Println(str)
     // 接口参数校验，防攻击
     validate := validator.New()
     if err = validate.Struct(info); err != nil {
@@ -73,16 +64,6 @@ func Analysis(c echo.Context) error{
         logrus.Panic("Args not allow.", err)
         return c.String(http.StatusBadRequest, "Bad request")
     }
-/*
-	rqst:=new(request)
-	if err := str.Bind(rqst); err != nil {
-		return err
-	}
-	jrqst, _ := json.Marshal(str)
-	var out bytes.Buffer
-	json.Indent(&out, jrqst,info.Keyword, "\t")
-	fmt.Println(jrqst)*/
-	//return c.JSON(http.StatusOK, str)
     return response.SendResponse(c,http.StatusOK, "body", str)
 }
 

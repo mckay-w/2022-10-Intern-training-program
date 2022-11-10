@@ -22,9 +22,6 @@ func InitWebFramework() {
 
 
 func StartServer() {
-	//e.Logger.Fatal(e.Start(":1323:80"))
-	//e.Start("127.0.0.1:80")  // 启动服务，注意默认端口80不能省略
-	//e.Logger.Fatal(e.Start("https://www.example.com"))
     e.Logger.Fatal(e.Start("127.0.0.1:80"))  // 启动服务，注意默认端口80不能省略
 
 }
