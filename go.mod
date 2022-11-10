@@ -11,6 +11,8 @@ require (
 	gorm.io/gorm v1.24.1
 )
 
+require gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
+
 require (
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect

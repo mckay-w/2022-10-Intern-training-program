@@ -59,15 +59,17 @@ func myfind(rqst request) Users {
     return result
 }
 
-
+// add user to sql
 func adduser(newuser Users) {
 	DB.Create(&newuser)
 }
 
+// delete user from sql
 func deleteuser(user Users){
 	DB.Delete(&user)
 }
 
+// modify user field in sql
 func dodify(user Users, modi request) {
 
 	if(modi.keyword=="id"){

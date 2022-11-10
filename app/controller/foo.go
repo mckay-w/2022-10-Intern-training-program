@@ -9,7 +9,7 @@ import (
 	"bytes"
 	"io/ioutil"
 	"github.com/go-playground/validator"
-	//"flybitch/app"
+    "github.com/sirupsen/logrus"
 )
 
 
@@ -30,39 +30,6 @@ func Ping(c echo.Context) error {
 	// just a demo
 	return response.SendResponse(c, http.StatusOK, "", "pong!")
 }
-/*
-// get请求处理
-func handleGet(c echo.Context) error {
-    return c.String(http.StatusOK, "Hello")
-}
-
-// post请求处理
-func handlePost(c echo.Context) error {
-    defer c.Request().Body.Close()
-    body, err := ioutil.ReadAll(c.Request().Body)
-    if err != nil {
-        fmt.Println(err)
-    }
-
-    var info PostInfo
-    if err = json.Unmarshal(body, &info); err != nil {  // 将字节数组转换成struct类型
-        fmt.Println("json unmarshal error: ", err)
-        return c.String(http.StatusInternalServerError, "Json unmarshal error")
-    }
-
-    // 接口参数校验，防攻击
-    validate := validator.New()
-    if err = validate.Struct(info); err != nil {
-        fmt.Println("Args not allow.", err)
-        return c.String(http.StatusBadRequest, "Bad request")
-    }
-
-    return c.String(http.StatusOK, "Post json data ok.")
-}*/
-
-type CustomContext struct {
-	echo.Context
-}
 
 
 // return itself
@@ -70,6 +37,7 @@ func Query(c echo.Context) error {
     qry:=c.Request().URL.Query().Encode()
     if qry ==""{
         fmt.Println("No query")
+        logrus.Panic("No query")
         return c.String(http.StatusBadRequest, "Bad request")
     }else {
         fmt.Println(qry)
@@ -77,80 +45,49 @@ func Query(c echo.Context) error {
     }
 }
 
-
+/*
+get a struct from request
+print it in form of josn
+*/
 func Analysis(c echo.Context) error{
 	defer c.Request().Body.Close()
     body, err := ioutil.ReadAll(c.Request().Body)
     if err != nil {
         fmt.Println(err)
+        logrus.Panic(err)
     }
 
     var info request
     if err = json.Unmarshal(body, &info); err != nil {  // 将字节数组转换成struct类型
         fmt.Println("json unmarshal error: ", err)
+        logrus.Panic("json unmarshal error: ", err)
         return c.String(http.StatusInternalServerError, "Json unmarshal error")
     }
-	fmt.Println(info)
-
+	//fmt.Println(info)
+    str:="\"Keyword\":\""+info.Keyword+"\",\"Value\":\""+info.Value+"\""
+    //fmt.Println(str)
     // 接口参数校验，防攻击
     validate := validator.New()
     if err = validate.Struct(info); err != nil {
         fmt.Println("Args not allow.", err)
+        logrus.Panic("Args not allow.", err)
         return c.String(http.StatusBadRequest, "Bad request")
     }
-
-
+/*
 	rqst:=new(request)
-	if err := c.Bind(rqst); err != nil {
+	if err := str.Bind(rqst); err != nil {
 		return err
 	}
-	jrqst, _ := json.Marshal(rqst)
+	jrqst, _ := json.Marshal(str)
 	var out bytes.Buffer
-	json.Indent(&out, jrqst,"", "\t")
-	fmt.Println(jrqst)
-	return c.JSON(http.StatusOK, rqst)
+	json.Indent(&out, jrqst,info.Keyword, "\t")
+	fmt.Println(jrqst)*/
+	//return c.JSON(http.StatusOK, str)
+    return response.SendResponse(c,http.StatusOK, "body", str)
 }
 
 
 
 
-type CustomBinder struct {}
-
-func (cb *CustomBinder) Bind(i interface{}, c echo.Context) (err error) {
-	// 你也许会用到默认的绑定器
-	db := new(echo.DefaultBinder)
-	if err = db.Bind(i, c); err != echo.ErrUnsupportedMediaType {
-		return
-	}
-
-	// 做你自己的实现
-
-	return
-}
-/*
-func run(){
-	resp, err := http.Get("http://httpbin.org/get")
-	defer resp.Body.Close()
-    // 200 OK
-    fmt.Println(resp.Status)
-    fmt.Println(resp.Header)
-
-    buf := make([]byte, 1024)
-    for {
-        // 接收服务端信息
-        n, err := resp.Body.Read(buf)
-        if err != nil && err != io.EOF {
-            fmt.Println(err)
-            return
-        } else {
-            res := string(buf[:n])
-            fmt.Println(res)
-            break
-        }
-    }
-	//http.HandleFunc("/go", myHandler);
-	
-
-}*/
 
 
