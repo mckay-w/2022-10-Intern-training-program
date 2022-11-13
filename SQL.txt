@@ -1,0 +1,12 @@
+create database todo；
+create user 'todo'@'localhost' identified by 'todo123'；
+grant all privileges on todo.* to 'todo'@'localhost';
+use todo
+mysql> create table user(
+    -> `id` int unsigned auto_increment,
+    -> `name` varchar(40) not null,
+    -> primary key(id)
+    -> );
+ create user 'qwq'@'localhost' identified by 'qwqpwd';
+mysql> grant select on todo.* to 'qwq'@'localhost';
+drop user 'qwq'@'localhost';
