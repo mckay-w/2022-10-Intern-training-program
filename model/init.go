@@ -40,24 +40,24 @@ type request struct{
 }
 
 // 键值对查找
-func myfind(rqst request) Users {
+func Myfind(rqst request) Users {
 	var result Users;
     DB.Where(rqst.keyword+" = ?",rqst.value).Find(&result)
     return result
 }
 
 // add user to sql
-func adduser(newuser Users) {
+func Adduser(newuser Users) {
 	DB.Create(&newuser)
 }
 
 // delete user from sql
-func deleteuser(user Users){
+func Deteleuser(user Users){
 	DB.Delete(&user)
 }
 
 // modify user field in sql
-func dodify(user Users, modi request) {
+func Modify(user Users, modi request) {
 
 	if(modi.keyword=="id"){
 		//user.id=uint(modi.value)

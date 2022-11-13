@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"encoding/json"
 	"fmt"
-	"bytes"
+	//"bytes"
 	"io/ioutil"
 	"github.com/go-playground/validator"
     "github.com/sirupsen/logrus"
@@ -36,6 +36,17 @@ func Query(c echo.Context) error {
         fmt.Println(qry)
         return response.SendResponse(c, http.StatusOK, "query", c)
     }
+    //return response.SendResponse(c, http.StatusOK, "query", c.Request().URL.Query().Encode())
+    /*
+    defer c.Request().Body.Close()
+    qry,err:=ioutil.ReadAll(c.Request().Body)
+    if err==nil{
+        return response.SendResponse(c, http.StatusOK, "query", qry)// binary code
+    }else {
+        fmt.Println(err)
+        logrus.Panic(err)
+        return response.SendResponse(c, http.StatusOK, "query", "bad query")
+    }*/
 }
 
 /*
