@@ -7,9 +7,9 @@ type Foo struct {
 }*/
 
 type Users struct {
-	Id     uint64 `gorm:"not null;autoIncrement;primaryKey"`
-	Name   string `gorm:"not null"`
-	Passwd string `gorm:"not null"`
+	Id     uint64 `gorm:"not null;autoIncrement;primaryKey" json:"id"` 
+	Name   string `gorm:"not null" json:"name"`
+	Passwd string `gorm:"not null" json:"passwd"`
 }
 type Todos struct {
 	Id      uint64 `gorm:"not null;autoIncrement;primaryKey"`
