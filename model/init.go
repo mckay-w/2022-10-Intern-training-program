@@ -2,8 +2,9 @@ package model
 
 import (
 	"fmt"
-	"net/http"
 	"io/ioutil"
+	"net/http"
+
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
@@ -39,7 +40,7 @@ func connectDatabase() {
 }
 
 type request struct {
-	keyword string `josn:"keyword"`
+	keyword string `josn:"keyword" `
 	value   string `josn:"value"`
 }
 
@@ -54,16 +55,15 @@ func Myfind(c echo.Context) (err error) {
 	return c.JSON(http.StatusOK, result)
 }
 
-type adusers struct {
-	Name   string `gorm:"not null" json:"name"`
-	Passwd string `gorm:"not null" json:"passwd"`
+type Adusers struct {
+	Name   string `gorm:"not null" json:"name" form:"name" query:"name"`
+	Passwd string `gorm:"not null" json:"passwd" form:"passwd" query:"passwd"`
 }
-
 
 // add user to sql
 func Adduser(c echo.Context) (err error) {
 	//var newuser Users;
-	newuser := new(adusers)
+	newuser := new(Users)
 	if err = c.Bind(newuser); err != nil {
 		return
 	}
@@ -116,3 +116,5 @@ func getbody(c echo.Context) []byte {
 	}
 	return body
 }
+
+
