@@ -39,26 +39,23 @@ func connectDatabase() {
 	}
 }
 
-type request struct {
-	keyword string `josn:"keyword" `
-	value   string `josn:"value"`
+type Request struct {
+	Id int `json:"id"`
+	Keyword string `josn:"keyword" `
+	Value   string `josn:"value"`
 }
 
 // 键值对查找
 func Myfind(c echo.Context) (err error) {
 	var result Users
-	rqst := new(request)
+	rqst := new(Request)
 	if err = c.Bind(rqst); err != nil {
 		return
 	}
-	DB.Where(rqst.keyword+" = ?", rqst.value).Find(&result)
+	DB.Where(rqst.Keyword+" = ?", rqst.Value).Find(&result)
 	return c.JSON(http.StatusOK, result)
 }
 
-type Adusers struct {
-	Name   string `gorm:"not null" json:"name" form:"name" query:"name"`
-	Passwd string `gorm:"not null" json:"passwd" form:"passwd" query:"passwd"`
-}
 
 // add user to sql
 func Adduser(c echo.Context) (err error) {
@@ -96,15 +93,30 @@ func Deteleuser(c echo.Context) (err error) {
 }
 
 // modify user field in sql
-func Modify(user Users, modi request) {
-	if modi.keyword == "id" {
-		//user.id=uint(modi.value)
-	} else if modi.keyword == "name" {
-		user.Name = modi.value
-	} else if modi.keyword == "passwd" {
-		user.Passwd = modi.value
+func Modify(c echo.Context) (err error) {
+	rqst := new(Request)
+	if err = c.Bind(rqst); err != nil {
+		return
 	}
-
+	//str:="\"Keyword\":\""+.Keyword+"\",\"Value\":\""+info.Value+"\""
+	// 接口参数校验，防攻击
+	validate := validator.New()
+	if err := validate.Struct(rqst); err != nil {
+		fmt.Println("Args not allow.", err)
+		logrus.Panic("Args not allow.", err)
+	}
+	var ori,reg Users
+	DB.Where("id = ?", rqst.Id).Find(&ori)
+	reg=ori
+	if rqst.Keyword == "id" {
+		//user.id=uint(modi.value)
+	} else if rqst.Keyword == "name" {
+		reg.Name = rqst.Value
+	} else if rqst.Keyword == "passwd" {
+		reg.Passwd = rqst.Value
+	}
+	DB.Model(&ori).Updates(&reg)
+	return c.JSON(http.StatusOK, rqst)
 }
 
 func getbody(c echo.Context) []byte {

@@ -15,7 +15,7 @@ func addRoutes() {
 	api.POST("/SQL/adduser",model.Adduser)
 	api.POST("/SQL/deleteuser",model.Deteleuser)
 	api.POST("/SQL/find",model.Myfind)
-	//api.POST("/SQL/modify",model.Modify)
+	api.POST("/SQL/modify",model.Modify)
 }
 
 
